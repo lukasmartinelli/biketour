@@ -22,6 +22,8 @@ SECRET_KEY = 'sezps7!5q(jm*=$fy_5r(=-o)*nk&n+z75o0n@p@4ihx7n4b$0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
+
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -59,8 +61,12 @@ WSGI_APPLICATION = 'biketour.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB', 'biketour'),
+        'USER': os.getenv('POSTGRES_USER', 'biketour'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'biketour'),
+        'HOST': os.getenv('POSTGRES_HOST', '127.0.0.1'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
 

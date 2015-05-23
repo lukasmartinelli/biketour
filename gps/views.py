@@ -6,6 +6,7 @@ import googlemaps
 import traceback
 import dateutil.parser
 
+from biketour.settings import GOOGLE_MAPS_API_KEY
 from .models import Point
 
 def log(request):
@@ -25,7 +26,7 @@ def log(request):
     point.provider = request.GET['provider']
 
     try:
-        gmaps = googlemaps.Client(key='AIzaSyC9PmM2QMCUyR0j6No5aQRHzOdFTvrGarA')
+        gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
         
         result = gmaps.elevation((lat, lon))[0]
         resolution = result['resolution']
