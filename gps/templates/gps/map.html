@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>A simple map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+
+<div id='map'></div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoibW9yZ2Vua2FmZmVlIiwiYSI6IjIzcmN0NlkifQ.0LRTNgCc-envt9d5MzR75w';
+var map = L.mapbox.map('map', 'mapbox.streets').setView([47.3782611, 8.5272144], 14);
+
+
+$.get('/gps/track/current', function(geoJSON) {
+  var position = geoJSON.features[0];
+  var accuracy = position.properties.accuracy;
+  var buffered = turf.buffer(position, accuracy, 'meters');
+  var result = turf.featurecollection([buffered, position]);
+  var positionLayer = L.mapbox.featureLayer(result).addTo(map);
+
+  map.fitBounds(positionLayer.getBounds());
+  positionLayer.eachLayer(function(layer) {
+    var props = layer.feature.properties;
+    var time = moment.utc(props.time).format('h:mmA');
+    var altitude = props.altitude + ' m';
+    var speed = props.speed + ' km/h';
+    var content = '<h2> Position from ' + time + ' <\/h2>';
+    content += '<p>Speed: ' + speed + '</br>';
+    content += 'Altitude: ' + altitude + '</p>';
+    layer.bindPopup(content);
+  });
+
+
+});
+
+$.get('/gps/track', function(geoJSON) {
+  var latestTrack = geoJSON.features[0];
+  var simplifiedTrack = turf.simplify(latestTrack, 0.01);
+  var trackLayer = L.mapbox.featureLayer(simplifiedTrack).addTo(map);
+});
+
+$.get('/static/track2.json', function(geoJSON) {
+  var latestTrack = geoJSON.features[0];
+  var simplifiedTrack = turf.simplify(latestTrack, 0.01);
+  var track2Layer = L.mapbox.featureLayer(simplifiedTrack).addTo(map);
+});
+
+</script>
+</body>
+</html>
+
