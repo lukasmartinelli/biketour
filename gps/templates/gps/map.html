@@ -9,6 +9,28 @@
 <style>
   body { margin:0; padding:0; }
   #map { position:absolute; top:0; bottom:0; width:100%; }
+  .leaflet-popup-content img {
+     width: 100%;
+     display: block;
+  }
+  .leaflet-popup-content-wrapper {
+    background:#2c3e50;
+    color:#fff;
+    font-size:16px;
+    line-height:24px;
+    }
+  .leaflet-popup-content-wrapper a {
+    color:rgba(255,255,255,0.5);
+    }
+  .leaflet-popup-tip-container {
+    width:30px;
+    height:15px;
+    }
+  .leaflet-popup-tip {
+    border-left:15px solid transparent;
+    border-right:15px solid transparent;
+    border-top:15px solid #2c3e50;
+    }
 </style>
 </head>
 <body>
@@ -21,6 +43,14 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoibW9yZ2Vua2FmZmVlIiwiYSI6IjIzcmN0NlkifQ.0LRTNgCc-envt9d5MzR75w';
 var map = L.mapbox.map('map', 'mapbox.streets').setView([47.3782611, 8.5272144], 14);
 
+function hoverize(featureLayer) {
+  featureLayer.on('mouseover', function(e) {
+      e.layer.openPopup();
+  });
+  featureLayer.on('mouseout', function(e) {
+      e.layer.closePopup();
+  });
+}
 
 $.get('/gps/track/current', function(geoJSON) {
   var position = geoJSON.features[0];
@@ -35,25 +65,29 @@ $.get('/gps/track/current', function(geoJSON) {
     var time = moment.utc(props.time).format('h:mmA');
     var altitude = props.altitude + ' m';
     var speed = props.speed + ' km/h';
-    var content = '<h2> Position from ' + time + ' <\/h2>';
+    var content = '<h2>' + time + ' </h2>';
     content += '<p>Speed: ' + speed + '</br>';
     content += 'Altitude: ' + altitude + '</p>';
     layer.bindPopup(content);
   });
+});
 
-
+var timelineLayer = L.mapbox.featureLayer('/twitter/timeline').addTo(map);
+timelineLayer.on('ready', function() {
+  timelineLayer.eachLayer(function(layer) {
+    var props = layer.feature.properties;
+    var time = moment.utc(props.time).format('h:mmA');
+    var content = '<h2>' + time + ' </h2>';
+    content += '<p>' + props.text + ' </p>';
+    if(props.photo) {
+      content += '<img src="' + props.photo + '" />';
+    }
+    layer.bindPopup(content, { minWidth: 320 });
+  });
 });
 
 $.get('/gps/track', function(geoJSON) {
   var trackLayer = L.mapbox.featureLayer(geoJSON).addTo(map);
-});
-
-$.get('/static/track1.json', function(geoJSON) {
-  var track1Layer = L.mapbox.featureLayer(geoJSON).addTo(map);
-});
-
-$.get('/static/track2.json', function(geoJSON) {
-  var track2Layer = L.mapbox.featureLayer(geoJSON).addTo(map);
 });
 
 </script>

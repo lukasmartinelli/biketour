@@ -50,7 +50,8 @@ def extract_point(point):
             'provider': point.provider,
             'altitude': point.native_altitude,
             'marker-symbol': 'bicycle',
-            'marker-color': '#525564'
+            'marker-color': '#2c3e50',
+            'marker-size': 'large',
         },
         'geometry': {
             'type': 'Point',
@@ -68,6 +69,10 @@ def track(request):
             'geometry': {
                 'type': 'LineString',
                 'coordinates': coords,
+            },
+            'properties': {
+                'stroke': '#2c3e50',
+                'stroke-width': 4
             }
         }
         
