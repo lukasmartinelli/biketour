@@ -4,3 +4,4 @@ whitenoise==1.0.6
 psycopg2==2.6
 googlemaps==2.2
 python-dateutil==2.4.2
+tweepy==3.3.0

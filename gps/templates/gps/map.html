@@ -45,15 +45,15 @@ $.get('/gps/track/current', function(geoJSON) {
 });
 
 $.get('/gps/track', function(geoJSON) {
-  var latestTrack = geoJSON.features[0];
-  var simplifiedTrack = turf.simplify(latestTrack, 0.01);
-  var trackLayer = L.mapbox.featureLayer(simplifiedTrack).addTo(map);
+  var trackLayer = L.mapbox.featureLayer(geoJSON).addTo(map);
+});
+
+$.get('/static/track1.json', function(geoJSON) {
+  var track1Layer = L.mapbox.featureLayer(geoJSON).addTo(map);
 });
 
 $.get('/static/track2.json', function(geoJSON) {
-  var latestTrack = geoJSON.features[0];
-  var simplifiedTrack = turf.simplify(latestTrack, 0.01);
-  var track2Layer = L.mapbox.featureLayer(simplifiedTrack).addTo(map);
+  var track2Layer = L.mapbox.featureLayer(geoJSON).addTo(map);
 });
 
 </script>
