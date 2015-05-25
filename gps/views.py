@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
 
 import googlemaps
 import traceback
@@ -60,6 +61,7 @@ def extract_point(point):
     }
 
 
+@cache_page(30)
 def track(request):
 
     def extract_line(points):

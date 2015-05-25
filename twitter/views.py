@@ -3,6 +3,7 @@ import traceback
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
 
 import tweepy
 
@@ -34,6 +35,7 @@ MAKI_ICONS = [
     'chemist', 'mobilephone', 'scooter', 'gift', 'ice-cream', 'dentist'
 ]
 
+@cache_page(60)
 def timeline(request):
     auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_KEY, TWITTER_ACCESS_SECRET)
