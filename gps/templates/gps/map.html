@@ -2,8 +2,9 @@
 <html>
 <head>
 <meta charset=utf-8 />
-<title>A simple map</title>
+<title>From Switzerland to Greece</title>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src="//cdn.jsdelivr.net/autolinker/0.17.1/Autolinker.min.js"></script>
 <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' />
 <style>
@@ -13,24 +14,39 @@
      width: 100%;
      display: block;
   }
-  .leaflet-popup-content-wrapper {
-    background:#2c3e50;
-    color:#fff;
-    font-size:16px;
-    line-height:24px;
-    }
   .leaflet-popup-content-wrapper a {
-    color:rgba(255,255,255,0.5);
-    }
-  .leaflet-popup-tip-container {
-    width:30px;
-    height:15px;
-    }
+    color: rgba(255,255,255,0.5);
+    font-weight: bold;
+  }
+  .leaflet-popup-content-wrapper a:hover {
+     color: #fff;
+  }
+  .leaflet-popup-content {
+     padding: 0px !important;
+     color: #fff;
+  }
+  .leaflet-popup-content-wrapper {
+    background:transparent;
+  }
   .leaflet-popup-tip {
-    border-left:15px solid transparent;
-    border-right:15px solid transparent;
-    border-top:15px solid #2c3e50;
-    }
+    border-color: transparent;
+  }
+  .position, .tweet {
+    padding-top: 15px;
+    padding: 10px 10px 15px;
+  }
+  .position {
+    background: #2c3e50;
+  }
+  .tweet {
+    background: #63b6e5;
+  }
+  .tweet-campsite {
+    background: #fa946e;
+  }
+  .tweet-restaurant, .tweet-cafe {
+    background: #c091e6;
+  }
 </style>
 </head>
 <body>
@@ -41,7 +57,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoibW9yZ2Vua2FmZmVlIiwiYSI6IjIzcmN0NlkifQ.0LRTNgCc-envt9d5MzR75w';
-var map = L.mapbox.map('map', 'mapbox.streets').setView([47.3782611, 8.5272144], 14);
+var map = L.mapbox.map('map', 'mapbox.streets').setView([47.3782611, 8.5272144], 10);
 
 function hoverize(featureLayer) {
   featureLayer.on('mouseover', function(e) {
@@ -62,27 +78,38 @@ $.get('/gps/track/current', function(geoJSON) {
   map.fitBounds(positionLayer.getBounds());
   positionLayer.eachLayer(function(layer) {
     var props = layer.feature.properties;
-    var time = moment.utc(props.time).format('h:mmA');
+    var time = moment.utc(props.time).format('dddd d. MMMM hh:mm');
     var altitude = props.altitude + ' m';
     var speed = props.speed + ' km/h';
-    var content = '<h2>' + time + ' </h2>';
+    var content = '<div class="position">';
+    content += '<h2>' + time + ' </h2>';
     content += '<p>Speed: ' + speed + '</br>';
     content += 'Altitude: ' + altitude + '</p>';
+    content += '</div>';
     layer.bindPopup(content);
   });
 });
+
+function unhashtagify(str) {
+  return (str.replace(/ (#[a-z0-9][a-z0-9\-_]*)/ig, ''));
+};
 
 var timelineLayer = L.mapbox.featureLayer('/twitter/timeline').addTo(map);
 timelineLayer.on('ready', function() {
   timelineLayer.eachLayer(function(layer) {
     var props = layer.feature.properties;
-    var time = moment.utc(props.time).format('h:mmA');
-    var content = '<h2>' + time + ' </h2>';
-    content += '<p>' + props.text + ' </p>';
+    var time = moment.utc(props.time).format('dddd d. MMMM hh:mm');
+    var content = '<div class="tweet tweet-' + props['marker-symbol'] + '">';
+    var text = unhashtagify(Autolinker.link(props.text));
+    content += '<h2>' + time + ' </h2>';
+    content += '<p>' + text + ' </p>';
     if(props.photo) {
+      content += '<a href="' + props.photo + '">';
       content += '<img src="' + props.photo + '" />';
+      content += '</a>';
     }
-    layer.bindPopup(content, { minWidth: 320 });
+    content += '</div>';
+    layer.bindPopup(content, { minWidth: 360 });
   });
 });
 

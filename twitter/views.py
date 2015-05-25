@@ -62,7 +62,7 @@ def timeline(request):
 def extract_point(tweet):
     lat, lon = tweet.geo['coordinates']
 
-    color = '#2c3e50'
+    color = '#63b6e5'
     icon = 'post'
     photo_url = ''
     if 'media' in tweet.entities:
@@ -76,6 +76,12 @@ def extract_point(tweet):
             icon_key = hash_tag['text'].lower()
             if icon_key in MAKI_ICONS:
                 icon = icon_key
+
+    if icon == 'campsite':
+        color = '#fa946e'
+
+    if icon == 'restaurant' or icon == 'cafe':
+        color = '#c091e6'
 
 
     return  {
