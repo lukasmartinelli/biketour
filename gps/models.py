@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Point(models.Model):
-    time = models.DateTimeField()
+    time = models.DateTimeField(db_index=True)
     lat = models.FloatField()
     lon = models.FloatField()
     accuracy = models.FloatField()

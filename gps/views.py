@@ -65,7 +65,7 @@ def extract_point(point):
 def track(request):
 
     def extract_line(points):
-        coords = [[p.lon, p.lat] for p in points]
+        coords = [[p['lon'], p['lat']] for p in points]
         return  {
             'type': 'Feature',
             'geometry': {
@@ -79,12 +79,12 @@ def track(request):
         }
         
 
-    points = Point.objects.all().order_by('time')
+    points = Point.objects.all().order_by('time').values('lon', 'lat')
 
     return JsonResponse({
         'type': 'FeatureCollection',
         'features': [
-                extract_line(points),
+            extract_line(points),
         ]
     }, safe=False)
 
