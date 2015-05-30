@@ -6,3 +6,4 @@ googlemaps==2.2
 python-dateutil==2.4.2
 tweepy==3.3.0
 django-silk==0.5.2
+gpxpy==0.9.8
