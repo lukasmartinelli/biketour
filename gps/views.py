@@ -1,16 +1,21 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 
 from silk.profiling.profiler import silk_profile
 
+import datetime
+import re
 import googlemaps
 import traceback
 import dateutil.parser
+import gpxpy
+import gpxpy.gpx
 
 from biketour.settings import GOOGLE_MAPS_API_KEY
 from .models import Point
+from .forms import UploadFileForm
 
 def log(request):
     point = Point()
@@ -61,6 +66,40 @@ def extract_point(point):
             'coordinates': [point.lon, point.lat],
         }
     }
+
+
+def upload_gpx(request):
+
+    def create_point(parsed_point):
+        point = Point()
+
+        point.time = parsed_point.time
+        if not point.time:
+            point.time = datetime.datetime.now()
+
+        point.native_altitude = parsed_point.elevation
+        point.lat = parsed_point.latitude
+        point.lon = parsed_point.longitude
+
+        point.save()
+        
+
+    def handle_uploaded_file(gpx_file):
+        content = gpx_file.read().decode("utf-8")
+        gpx = gpxpy.parse(content)
+        for track in gpx.tracks:
+            for segment in track.segments:
+                for point in segment.points:
+                    create_point(point)
+
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'gps/upload.html', {'form': form})
 
 
 @cache_page(30)

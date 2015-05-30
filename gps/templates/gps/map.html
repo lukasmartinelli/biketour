@@ -70,12 +70,11 @@ function hoverize(featureLayer) {
 
 $.get('/gps/track/current', function(geoJSON) {
   var position = geoJSON.features[0];
-  var accuracy = position.properties.accuracy;
+  var accuracy = position.properties.accuracy | 100;
   var buffered = turf.buffer(position, accuracy, 'meters');
   var result = turf.featurecollection([buffered, position]);
   var positionLayer = L.mapbox.featureLayer(result).addTo(map);
 
-  map.fitBounds(positionLayer.getBounds());
   positionLayer.eachLayer(function(layer) {
     var props = layer.feature.properties;
     var time = moment.utc(props.time).format('dddd d. MMMM hh:mm');
@@ -115,6 +114,7 @@ timelineLayer.on('ready', function() {
 
 $.get('/gps/track', function(geoJSON) {
   var trackLayer = L.mapbox.featureLayer(geoJSON).addTo(map);
+  map.fitBounds(trackLayer.getBounds());
 });
 
 </script>
