@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 
+from silk.profiling.profiler import silk_profile
+
 import googlemaps
 import traceback
 import dateutil.parser
@@ -17,7 +19,7 @@ def log(request):
 
     point.lat = float(request.GET['lat'])
     point.lon = float(request.GET['lon'])
-    
+
     point.speed = float(request.GET['speed'])
     point.native_altitude = float(request.GET['altitude'])
     point.accuracy = float(request.GET['accuracy'])
@@ -28,7 +30,7 @@ def log(request):
 
     try:
         gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
-        
+
         result = gmaps.elevation((lat, lon))[0]
         resolution = result['resolution']
         point.google_altitude = result['elevation']
@@ -64,6 +66,7 @@ def extract_point(point):
 @cache_page(30)
 def track(request):
 
+    @silk_profile()
     def extract_line(points):
         coords = [[p['lon'], p['lat']] for p in points]
         return  {
@@ -77,7 +80,7 @@ def track(request):
                 'stroke-width': 4
             }
         }
-        
+
 
     points = Point.objects.all().order_by('time').values('lon', 'lat')
 

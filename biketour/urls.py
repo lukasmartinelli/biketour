@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^gps/', include('gps.urls')),
     url(r'^twitter/', include('twitter.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^silk/', include('silk.urls', namespace='silk')),
 )
