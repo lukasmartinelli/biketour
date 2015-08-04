@@ -44,7 +44,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'silk',
     'gps',
 )
 
@@ -56,7 +55,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'silk.middleware.SilkyMiddleware',
 )
 
 ROOT_URLCONF = 'biketour.urls'
@@ -104,5 +102,3 @@ USE_TZ = True
 STATIC_ROOT= os.path.join(BASE_DIR,'static/')
 
 STATIC_URL = '/static/'
-
-SILKY_PYTHON_PROFILER = True

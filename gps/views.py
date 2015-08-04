@@ -3,8 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 
-from silk.profiling.profiler import silk_profile
-
 import datetime
 import re
 import googlemaps
@@ -105,7 +103,6 @@ def upload_gpx(request):
 @cache_page(30)
 def track(request):
 
-    @silk_profile()
     def extract_line(points):
         coords = [[p['lon'], p['lat']] for p in points]
         return  {
