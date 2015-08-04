@@ -45,7 +45,7 @@ def timeline(request):
 
     points = []
     cursor = tweepy.Cursor(api.user_timeline, id=TWITTER_USER_TIMELINE) \
-                   .items(100)
+                   .items(200)
 
     for tweet in cursor:
         try:
