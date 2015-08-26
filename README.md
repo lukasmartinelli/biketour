@@ -1,6 +1,8 @@
-# My Biketour to Greece
+# My Biketour from Switzerland to Greece
 
-This was hacked together in a day to provide updates about my biketour to greece to my friends and familiy.
+This was hacked together in a day to provide updates about my biketour from Switzerland to Greece to my friends and familiy.
+
+![Biketour Screenshot](screenshot.png)
 
 ## Features
 
