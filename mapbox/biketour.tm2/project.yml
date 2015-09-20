@@ -10,8 +10,8 @@ bounds:
   - 180
   - 85.0511
 center: 
-  - 16.0181
-  - 42.4559
+  - 15.3369
+  - 45.2285
   - 6
 description: My Biketour from Switzerland to Greece
 format: "png8:m=h"

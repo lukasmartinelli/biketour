@@ -4,10 +4,10 @@
 
 <Parameters>
   <Parameter name="attribution"><![CDATA[Lukas Martinelli]]></Parameter>
-  <Parameter name="center">14.651,45.0532,9</Parameter>
+  <Parameter name="center">9.011,47.2185,9</Parameter>
   <Parameter name="description"><![CDATA[My biketour from Switzerland to Greece.]]></Parameter>
   <Parameter name="format">pbf</Parameter>
-  <Parameter name="json"><![CDATA[{"vector_layers":[{"id":"track","description":"Track","fields":{"stroke":"String","stroke-width":"Number"}},{"id":"timeline","description":"timeline","fields":{"marker-color":"String","marker-size":"String","marker-symbol":"String","photo":"String","text":"String","time":"String"}}]}]]></Parameter>
+  <Parameter name="json"><![CDATA[{"vector_layers":[{"id":"track","description":"Track","fields":{"marker-color":"String","marker-size":"String","marker-symbol":"String","stroke":"String","stroke-width":"Number"}},{"id":"timeline","description":"timeline","fields":{"marker-color":"String","marker-size":"String","marker-symbol":"String","photo":"String","text":"String","time":"String"}}]}]]></Parameter>
   <Parameter name="maxzoom">9</Parameter>
   <Parameter name="minzoom">0</Parameter>
   <Parameter name="name"><![CDATA[Biketour]]></Parameter>

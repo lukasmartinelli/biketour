@@ -2,12 +2,12 @@ _prefs:
   disabled: []
   inspector: false
   mapid: morgenkaffee.6e6ae68a
-  rev: s-b981295f
+  rev: s-775a897a
   saveCenter: true
 attribution: Lukas Martinelli
 center: 
-  - 14.651
-  - 45.0532
+  - 9.011
+  - 47.2185
   - 9
 description: My biketour from Switzerland to Greece.
 Layer: 
@@ -18,6 +18,9 @@ Layer:
       type: geojson
     description: Track
     fields: 
+      "marker-color": String
+      "marker-size": String
+      "marker-symbol": String
       stroke: String
       "stroke-width": Number
     properties: 
